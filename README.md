@@ -33,7 +33,7 @@ However, there is a more [complete list of expected responses](https://stackover
       };
 
 
-
+* Add node dependencies `npm install --save lodash` and `npm install --save pluralize`
 * Drop the blueprints from this repository in `myproject/api/blueprints`
 * Generate some API resources, e.g. `sails generate api user`
 * Start your app with `sails lift`
