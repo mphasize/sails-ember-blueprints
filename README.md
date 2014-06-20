@@ -47,6 +47,17 @@ Now you should be up and running and your Ember Data app should be able to talk 
 If you have logged in users and you always want to associate newly created records with the current user, take a look at `blueprints/create.js` lines 40-47 and uncomment the code if it fits your needs.
 
 
+# Todo
+
+### Adapt all blueprints or remove unused blueprints
+
+Some blueprints like `add` or `remove` aren't adapted yet, because I didn't run into a situation where Ember's RESTAdapter would acutally make use of them. If you know, when Ember Data might use subroutes for related models, please let me know.
+
+### Make the blueprints testable
+
+I am still trying to figure out how to make these blueprints more maintainable and testable.
+@davidrivera suggested to put the blueprints into a generator.
+
 # Scope
 
 The blueprints in this repository should provide a starting point for a Sails backend that works with an Ember frontend app. However, there are a lot of things missing that would be needed for a full blown app (like authentication and access control) but these things don't really fit into the blueprints.
