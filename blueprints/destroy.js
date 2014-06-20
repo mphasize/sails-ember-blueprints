@@ -1,10 +1,8 @@
 /**
  * Module dependencies
  */
-var util = require('util'),
-  actionUtil = require('./_util/actionUtil');
-
-
+var util = require( 'util' ),
+  actionUtil = require( './_util/actionUtil' );
 
 /**
  * Destroy One Record
@@ -21,30 +19,31 @@ var util = require('util'),
  * Optional:
  * @param {String} callback - default jsonp callback param (i.e. the name of the js function returned)
  */
-module.exports = function destroyOneRecord (req, res) {
+module.exports = function destroyOneRecord( req, res ) {
 
-  var Model = actionUtil.parseModel(req);
-  var pk = actionUtil.requirePk(req);
+  var Model = actionUtil.parseModel( req );
+  var pk = actionUtil.requirePk( req );
 
-  var query = Model.findOne(pk);
-  query = actionUtil.populateEach(query, req.options);
-  query.exec(function foundRecord (err, record) {
-    if (err) return res.serverError(err);
-    if(!record) return res.notFound('No record found with the specified `id`.');
+  var query = Model.findOne( pk );
+  query = actionUtil.populateEach( query, req.options );
+  query.exec( function foundRecord( err, record ) {
+    if ( err ) return res.serverError( err );
+    if ( !record ) return res.notFound( 'No record found with the specified `id`.' );
 
-    Model.destroy(pk).exec(function destroyedRecord (err) {
-      if (err) return res.negotiate(err);
+    Model.destroy( pk ).exec( function destroyedRecord( err ) {
+      if ( err ) return res.negotiate( err );
 
-      if (sails.hooks.pubsub) {
-        Model.publishDestroy(pk, !sails.config.blueprints.mirror && req, {previous: record});
-        if (req.isSocket) {
-          Model.unsubscribe(req, record);
-          Model.retire(record);
+      if ( sails.hooks.pubsub ) {
+        Model.publishDestroy( pk, !sails.config.blueprints.mirror && req, {
+          previous: record
+        } );
+        if ( req.isSocket ) {
+          Model.unsubscribe( req, record );
+          Model.retire( record );
         }
       }
 
-      //return res.ok(record);
-      return res.ok(null); // Ember Data REST Adapter expects NULL after DELETE
-    });
-  });
+      return res.ok( null ); // Ember Data REST Adapter expects NULL after DELETE
+    } );
+  } );
 };

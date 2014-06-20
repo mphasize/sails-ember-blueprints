@@ -2,8 +2,8 @@
  * Module dependencies
  */
 var util = require( 'util' ),
-	actionUtil = require( './_util/actionUtil' ),
-	pluralize = require( 'pluralize' );
+  actionUtil = require( './_util/actionUtil' ),
+  pluralize = require( 'pluralize' );
 
 /**
  * Find One Record
@@ -22,28 +22,28 @@ var util = require( 'util' ),
 
 module.exports = function findOneRecord( req, res ) {
 
-	var Model = actionUtil.parseModel( req );
-	var pk = actionUtil.requirePk( req );
+  var Model = actionUtil.parseModel( req );
+  var pk = actionUtil.requirePk( req );
 
-	var documentIdentifier = Model.identity;
+  var documentIdentifier = Model.identity;
 
-	var query = Model.findOne( pk );
-	query = actionUtil.populateEach( query, req.options );
-	query.exec( function found( err, matchingRecord ) {
-		if ( err ) return res.serverError( err );
-		if ( !matchingRecord ) return res.notFound( 'No record found with the specified `id`.' );
+  var query = Model.findOne( pk );
+  query = actionUtil.populateEach( query, req.options );
+  query.exec( function found( err, matchingRecord ) {
+    if ( err ) return res.serverError( err );
+    if ( !matchingRecord ) return res.notFound( 'No record found with the specified `id`.' );
 
-		if ( sails.hooks.pubsub && req.isSocket ) {
-			Model.subscribe( req, matchingRecord );
-			actionUtil.subscribeDeep( req, matchingRecord );
-		}
+    if ( sails.hooks.pubsub && req.isSocket ) {
+      Model.subscribe( req, matchingRecord );
+      actionUtil.subscribeDeep( req, matchingRecord );
+    }
 
-		matchingRecord = actionUtil.asyncAssociationLinks( Model, [ matchingRecord ], req.options.associations )[0];
+    matchingRecord = actionUtil.asyncAssociationLinks( Model, [ matchingRecord ], req.options.associations )[ 0 ];
 
-		var jsonAPI = {};
-		jsonAPI[ documentIdentifier ] = matchingRecord;
+    var jsonAPI = {};
+    jsonAPI[ documentIdentifier ] = matchingRecord;
 
-		res.ok( jsonAPI );
-	} );
+    res.ok( jsonAPI );
+  } );
 
 };

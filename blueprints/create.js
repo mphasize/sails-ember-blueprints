@@ -2,7 +2,7 @@
  * Module dependencies
  */
 var util = require( 'util' ),
-	actionUtil = require( './_util/actionUtil' );
+  actionUtil = require( './_util/actionUtil' );
 
 /**
  * Create Record
@@ -19,57 +19,56 @@ var util = require( 'util' ),
  */
 module.exports = function createRecord( req, res ) {
 
-	var Model = actionUtil.parseModel( req );
+  var Model = actionUtil.parseModel( req );
 
-	var data = null;
+  var data = null;
 
-	if ( req.body && req.body[ Model.identity ] ) {
+  if ( req.body && req.body[ Model.identity ] ) {
+    data = req.body[ Model.identity ];
 
-		data = req.body[ Model.identity ];
+    // Omit any params w/ undefined data
+    data = _.omit( data, function ( p ) {
+      if ( _.isUndefined( p ) ) return true;
+    } );
 
-		// Omit any params w/ undefined data
-		data = _.omit( data, function ( p ) {
-			if ( _.isUndefined( p ) ) return true;
-		} );
+  }
+  if ( data === null ) {
+    return res.serverError( "Please provide values for '" + Model.identity + "' to be updated in the JSON API format, e.g. { " + Model.identity + ": { ... values ... } }" );
+  }
 
-	}
-	if ( data === null ) {
-		return res.serverError( "Please provide values for '" + Model.identity + "' to be updated in the JSON API format, e.g. { " + Model.identity + ": { ... values ... } }" );
-	}
+  // You can comment out the following lines if you don't need a logged in user or you don't want to associate created objects with the current user
+  //if ( req.user && req.user.id ) {
+  //  sails.log.debug( 'Injecting req.user into blueprint create -> data.' );
+  //  data.user = req.user.id;
+  //} else {
+  //  // exception for creating new users, otherwise any creative act needs a logged in user
+  //  if ( Model.identity !== 'user' ) return res.forbidden( "Create blueprint needs an authenticated user!" );
+  //}
 
-	// You can comment out the following lines if you don't need a logged in user or you don't want to associate created objects with the current user
-	//if ( req.user && req.user.id ) {
-	//	sails.log.debug( 'Injecting req.user into blueprint create -> data.' );
-	//	data.user = req.user.id;
-	//} else {
-	//	// exception for creating new users, otherwise any creative act needs a logged in user
-	//	if ( Model.identity !== 'user' ) return res.forbidden( "Create blueprint needs an authenticated user!" );
-	//}
+  // Create new instance of model using data from params
+  Model.create( data ).exec( function created( err, newInstance ) {
 
-	// Create new instance of model using data from params
-	Model.create( data ).exec( function created( err, newInstance ) {
+    // Differentiate between waterline-originated validation errors
+    // and serious underlying issues. Respond with badRequest if a
+    // validation error is encountered, w/ validation info.
+    if ( err ) return res.negotiate( err );
 
-		// Differentiate between waterline-originated validation errors
-		// and serious underlying issues. Respond with badRequest if a
-		// validation error is encountered, w/ validation info.
-		if ( err ) return res.negotiate( err );
+    // If we have the pubsub hook, use the model class's publish method
+    // to notify all subscribers about the created item
+    if ( req._sails.hooks.pubsub ) {
+      if ( req.isSocket ) {
+        Model.subscribe( req, newInstance );
+        Model.introduce( newInstance );
+      }
+      Model.publishCreate( newInstance, !req.options.mirror && req );
+    }
 
-		// If we have the pubsub hook, use the model class's publish method
-		// to notify all subscribers about the created item
-		if ( req._sails.hooks.pubsub ) {
-			if ( req.isSocket ) {
-				Model.subscribe( req, newInstance );
-				Model.introduce( newInstance );
-			}
-			Model.publishCreate( newInstance, !req.options.mirror && req );
-		}
+    var jsonAPI = {};
+    jsonAPI[ Model.identity ] = newInstance.toJSON();
 
-		var jsonAPI = {};
-		jsonAPI[ Model.identity ] = newInstance.toJSON();
-
-		// Send JSONP-friendly response if it's supported
-		// (HTTP 201: Created)
-		res.status( 201 );
-		res.ok( jsonAPI );
-	} );
+    // Send JSONP-friendly response if it's supported
+    // (HTTP 201: Created)
+    res.status( 201 );
+    res.ok( jsonAPI );
+  } );
 };
