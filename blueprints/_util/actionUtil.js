@@ -18,6 +18,8 @@ var JSONP_CALLBACK_PARAM = 'callback';
 module.exports = {
 
 	/**
+	 * // NOTE: This code was meant to make the API more compatible to the JSON API specification, but it isn't understood by Ember yet, so it's currently unused.
+
 	 * Following the URL Template Shorthands style in the JSON API specification
 	 *
 	 * "links": {
@@ -25,7 +27,6 @@ module.exports = {
 	 * }
 	 *
 	 */
-
 	asyncAssociationToplevelLinks: function ( resourceName, model, associations ) {
 		var links = {};
 		_.each( associations, function ( assoc ) {
@@ -37,6 +38,11 @@ module.exports = {
 		return links;
 	},
 
+	/**
+	 * This function looks for an additional property { async: true } in the model attribute definitions and inserts a link definition in the JSON output that is understood by Ember Data's "async" relationships (e.g. hasMany)
+	 *
+	 *
+	 */
 	asyncAssociationLinks: function ( model, records, associations ) {
 		_.each( records, function ( record ) {
 			var links = {};
@@ -51,6 +57,10 @@ module.exports = {
 		return records;
 	},
 
+	/**
+	 * This function makes associated models in Sails "side-load" (see JSON API specs / Ember JSON conventions) instead of being nested.
+	 *
+	 */
 	sideloadAssociations: function ( json, identifier, associations ) {
 		var assocContents = {};
 		_.each( associations, function ( assoc ) {
