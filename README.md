@@ -41,3 +41,12 @@ However, there is a more [complete list of expected responses](https://stackover
 
 Now you should be up and running and your Ember Data app should be able to talk to your Sails backend.
 
+
+### One more thing
+
+If you have logged in users and you always want to associate newly created records with the current user, take a look at `blueprints/create.js` lines 40-47 and uncomment the code if it fits your needs.
+
+
+# Scope
+
+The blueprints in this repository should provide a starting point for a Sails backend that works with an Ember frontend app. However, there are a lot of things missing that would be needed for a full blown app (like authentication and access control) but these things don't really fit into the blueprints.

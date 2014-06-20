@@ -36,13 +36,15 @@ module.exports = function createRecord( req, res ) {
 	if ( data === null ) {
 		return res.serverError( "Please provide values for '" + Model.identity + "' to be updated in the JSON API format, e.g. { " + Model.identity + ": { ... values ... } }" );
 	}
-	if ( req.user && req.user.id ) {
-		sails.log.debug( 'Injecting req.user into blueprint create -> data.' );
-		data.user = req.user.id;
-	} else {
-		// exception for creating new users, otherwise any creative act needs a logged in user
-		if ( Model.identity !== 'user' ) return res.forbidden( "Create blueprint needs an authenticated user!" );
-	}
+
+	// You can comment out the following lines if you don't need a logged in user or you don't want to associate created objects with the current user
+	//if ( req.user && req.user.id ) {
+	//	sails.log.debug( 'Injecting req.user into blueprint create -> data.' );
+	//	data.user = req.user.id;
+	//} else {
+	//	// exception for creating new users, otherwise any creative act needs a logged in user
+	//	if ( Model.identity !== 'user' ) return res.forbidden( "Create blueprint needs an authenticated user!" );
+	//}
 
 	// Create new instance of model using data from params
 	Model.create( data ).exec( function created( err, newInstance ) {
