@@ -53,6 +53,11 @@ If you have logged in users and you always want to associate newly created recor
 
 Some blueprints like `add` or `remove` aren't adapted yet, because I didn't run into a situation where Ember's RESTAdapter would acutally make use of them. If you know, when Ember Data might use subroutes for related models, please let me know.
 
+### Support bulk commits
+
+I didn't try it yet, but the Stackoverflow link above mentions, that the RESTAdapter is capable of issuing bulk requests for create, update and delete.
+The blueprints don't support these bulk commits yet.
+
 ### Make the blueprints testable
 
 I am still trying to figure out how to make these blueprints more maintainable and testable.
