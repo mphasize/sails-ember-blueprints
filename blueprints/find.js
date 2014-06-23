@@ -39,7 +39,7 @@ module.exports = function findRecords( req, res ) {
   // of the `id` param.   (mainly here for compatibility for 0.9, where
   // there was no separate `findOne` action)
   if ( actionUtil.parsePk( req ) ) {
-    return require( './findOne' )( req, res );
+    return require( './findone' )( req, res );
   }
 
   // Lookup for records that match the specified criteria
