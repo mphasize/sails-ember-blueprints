@@ -1,10 +1,14 @@
 /**
  * Module dependencies
  */
-var util = require('util'),
-  actionUtil = require('./_utils/actionUtil');
+var util = require( 'util' ),
+  actionUtil = require( './_util/actionUtil' );
 
-
+/**
+ * Switch to enable sideloading records - this is a temporary workaround until we find a more general solution
+ * @type {Boolean}
+ */
+var performSideload = false;
 
 /**
  * Find One Record
@@ -21,23 +25,23 @@ var util = require('util'),
  * @param {String} callback - default jsonp callback param (i.e. the name of the js function returned)
  */
 
-module.exports = function findOneRecord (req, res) {
+module.exports = function findOneRecord( req, res ) {
 
-  var Model = actionUtil.parseModel(req);
-  var pk = actionUtil.requirePk(req);
+  var Model = actionUtil.parseModel( req );
+  var pk = actionUtil.requirePk( req );
 
-  var query = Model.findOne(pk);
-  query = actionUtil.populateEach(query, req);
-  query.exec(function found(err, matchingRecord) {
-    if (err) return res.serverError(err);
-    if(!matchingRecord) return res.notFound('No record found with the specified `id`.');
+  var query = Model.findOne( pk );
+  query = actionUtil.populateEach( query, req );
+  query.exec( function found( err, matchingRecord ) {
+    if ( err ) return res.serverError( err );
+    if ( !matchingRecord ) return res.notFound( 'No record found with the specified `id`.' );
 
-    if (sails.hooks.pubsub && req.isSocket) {
-      Model.subscribe(req, matchingRecord);
-      actionUtil.subscribeDeep(req, matchingRecord);
+    if ( sails.hooks.pubsub && req.isSocket ) {
+      Model.subscribe( req, matchingRecord );
+      actionUtil.subscribeDeep( req, matchingRecord );
     }
 
-    res.ok(matchingRecord);
-  });
+    res.ok( actionUtil.emberizeJSON( Model, matchingRecord, req.options.associations, performSideload ) );
+  } );
 
 };

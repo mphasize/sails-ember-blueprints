@@ -1,9 +1,8 @@
 /**
  * Module dependencies
  */
-var util = require('util'),
-	actionUtil = require('./_utils/actionUtil');
-
+var util = require( 'util' ),
+  actionUtil = require( './_util/actionUtil' );
 
 /**
  * Create Record
@@ -18,36 +17,43 @@ var util = require('util'),
  * @param {String} callback - default jsonp callback param (i.e. the name of the js function returned)
  * @param {*} * - other params will be used as `values` in the create
  */
-module.exports = function createRecord (req, res) {
+module.exports = function createRecord( req, res ) {
 
-	var Model = actionUtil.parseModel(req);
+  var Model = actionUtil.parseModel( req );
+  var data = actionUtil.parseValues( req, Model );
 
-	// Create data object (monolithic combination of all parameters)
-	// Omit the blacklisted params (like JSONP callback param, etc.)
-	var data = actionUtil.parseValues(req);
+  /* if ( req.user && req.user.id ) {
+    sails.log.debug( 'Injecting req.user into blueprint create -> data.' );
+    data.user = req.user.id;
+  } else {
+    // exception for creating new users, otherwise any creative act needs a logged in user
+    if ( Model.identity !== 'user' ) return res.forbidden( "Create blueprint needs an authenticated user!" );
+  } */
 
+  // Create new instance of model using data from params
+  Model.create( data ).exec( function created( err, newInstance ) {
 
-	// Create new instance of model using data from params
-	Model.create(data).exec(function created (err, newInstance) {
+    // Differentiate between waterline-originated validation errors
+    // and serious underlying issues. Respond with badRequest if a
+    // validation error is encountered, w/ validation info.
+    if ( err ) return res.negotiate( err );
 
-		// Differentiate between waterline-originated validation errors
-		// and serious underlying issues. Respond with badRequest if a
-		// validation error is encountered, w/ validation info.
-		if (err) return res.negotiate(err);
+    // If we have the pubsub hook, use the model class's publish method
+    // to notify all subscribers about the created item
+    if ( req._sails.hooks.pubsub ) {
+      if ( req.isSocket ) {
+        Model.subscribe( req, newInstance );
+        Model.introduce( newInstance );
+      }
+      Model.publishCreate( newInstance, !req.options.mirror && req );
+    }
 
-		// If we have the pubsub hook, use the model class's publish method
-		// to notify all subscribers about the created item
-		if (req._sails.hooks.pubsub) {
-			if (req.isSocket) {
-				Model.subscribe(req, newInstance);
-				Model.introduce(newInstance);
-			}
-			Model.publishCreate(newInstance, !req.options.mirror && req);
-		}
+    // Send JSONP-friendly response if it's supported
+    // (HTTP 201: Created)
+    res.status( 201 );
 
-		// Send JSONP-friendly response if it's supported
-		// (HTTP 201: Created)
-		res.status(201);
-		res.ok(newInstance.toJSON());
-	});
+    var emberizedJSON = {};
+    emberizedJSON[ Model.identity ] = newInstance.toJSON();
+    res.ok( emberizedJSON );
+  } );
 };
