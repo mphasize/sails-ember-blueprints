@@ -48,7 +48,7 @@ If you have logged in users and you always want to associate newly created recor
 
 ### Sideloading records
 
-The `emberizeJSON` method in *actionUtil.js* can transform your populated records into sideloaded models, but you have to decide when is the right time to do this depending on your API needs.
+The `emberizeJSON` method in *actionUtil.js* can transform your populated *embedded* records into sideloaded records, but you have to decide when is the right time to do this depending on your API needs.
 
 You can use the `performSideload` switch at the beginning of each blueprint to set the behavior, but a better way would be to implement some kind of hook that determines whether to sideload or not based on the request.
 
