@@ -42,16 +42,19 @@ However, there is a more [complete list of expected responses](https://stackover
 Now you should be up and running and your Ember Data app should be able to talk to your Sails backend.
 
 
-### One more thing
+### Create with current user
 
-If you have logged in users and you always want to associate newly created records with the current user, take a look at `blueprints/create.js` lines 40-47 and uncomment the code if it fits your needs.
+If you have logged in users and you always want to associate newly created records with the current user, take a look at `blueprints/create.js` lines 25-31 and uncomment the code if it fits your needs.
+
+### Sideloading records
+
+The `emberizeJSON` method in *actionUtil.js* can transform your populated records into sideloaded models, but you have to decide when is the right time to do this depending on your API needs.
+
+You can use the `performSideload` switch at the beginning of each blueprint to set the behavior, but a better way would be to implement some kind of hook that determines whether to sideload or not based on the request.
 
 
 # Todo
 
-### Adapt all blueprints or remove unused blueprints
-
-Some blueprints like `add` or `remove` aren't adapted yet, because I didn't run into a situation where Ember's RESTAdapter would acutally make use of them. If you know, when Ember Data might use subroutes for related models, please let me know.
 
 ### Support bulk commits
 
