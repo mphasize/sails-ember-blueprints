@@ -1,9 +1,10 @@
 /**
  * Module dependencies
  */
-var util = require( 'util' ),
-  actionUtil = require( './_util/actionUtil' ),
-  pluralize = require( 'pluralize' );
+var util = require('util'),
+  actionUtil = require('./_utils/actionUtil');
+
+
 
 /**
  * Find Records
@@ -23,58 +24,42 @@ var util = require( 'util' ),
  * @param {String} callback - default jsonp callback param (i.e. the name of the js function returned)
  */
 
-module.exports = function findRecords( req, res ) {
+module.exports = function findRecords (req, res) {
 
   // Look up the model
-  var Model = actionUtil.parseModel( req );
+  var Model = actionUtil.parseModel(req);
 
-  // root level element in JSON api
-  var documentIdentifier = pluralize( Model.identity );
-
-  // We could use the JSON API URL shorthand template style, if the client supported it
-  // var documentLinks = actionUtil.asyncAssociationToplevelLinks( documentIdentifier, Model, req.options.associations );
 
   // If an `id` param was specified, use the findOne blueprint action
   // to grab the particular instance with its primary key === the value
   // of the `id` param.   (mainly here for compatibility for 0.9, where
   // there was no separate `findOne` action)
-  if ( actionUtil.parsePk( req ) ) {
-    return require( './findone' )( req, res );
+  if ( actionUtil.parsePk(req) ) {
+    return require('./findone')(req,res);
   }
 
   // Lookup for records that match the specified criteria
   var query = Model.find()
-    .where( actionUtil.parseCriteria( req ) )
-    .limit( actionUtil.parseLimit( req ) )
-    .skip( actionUtil.parseSkip( req ) )
-    .sort( actionUtil.parseSort( req ) );
+  .where( actionUtil.parseCriteria(req) )
+  .limit( actionUtil.parseLimit(req) )
+  .skip( actionUtil.parseSkip(req) )
+  .sort( actionUtil.parseSort(req) );
   // TODO: .populateEach(req.options);
-  query = actionUtil.populateEach( query, req.options );
-
-  query.exec( function found( err, matchingRecords ) {
-    if ( err ) return res.serverError( err );
+  query = actionUtil.populateEach(query, req);
+  query.exec(function found(err, matchingRecords) {
+    if (err) return res.serverError(err);
 
     // Only `.watch()` for new instances of the model if
     // `autoWatch` is enabled.
-    if ( req._sails.hooks.pubsub && req.isSocket ) {
-      Model.subscribe( req, matchingRecords );
-      if ( req.options.autoWatch ) {
-        Model.watch( req );
-      }
+    if (req._sails.hooks.pubsub && req.isSocket) {
+      Model.subscribe(req, matchingRecords);
+      if (req.options.autoWatch) { Model.watch(req); }
       // Also subscribe to instances of all associated models
-      _.each( matchingRecords, function ( record ) {
-        actionUtil.subscribeDeep( req, record );
-      } );
+      _.each(matchingRecords, function (record) {
+        actionUtil.subscribeDeep(req, record);
+      });
     }
 
-    matchingRecords = actionUtil.asyncAssociationLinks( Model, matchingRecords, req.options.associations );
-
-    var jsonAPI = {};
-    jsonAPI[ documentIdentifier ] = matchingRecords;
-
-    // jsonAPI = actionUtil.sideloadAssociations( jsonAPI, documentIdentifier, req.options.associations );
-    // res.set( 'Content-Type', 'application/vnd.api+json' );
-
-    res.ok( jsonAPI );
-  } );
+    res.ok(matchingRecords);
+  });
 };
