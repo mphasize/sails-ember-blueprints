@@ -64,6 +64,10 @@ You can use the `performSideload` switch at the beginning of each blueprint to s
 
 # Todo
 
+### Support pagination metadata
+
+Ember Data supports information about pagination in the form of a `meta` attribute at the top level of the generated JSON response. See description in the [Handling Metadata](http://emberjs.com/guides/models/handling-metadata/) Guide. Supporting this out-of-the-box might be a nice addition for the blueprints.
+
 
 ### Support bulk commits
 
