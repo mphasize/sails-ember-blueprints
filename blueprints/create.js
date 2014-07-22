@@ -48,12 +48,18 @@ module.exports = function createRecord( req, res ) {
       Model.publishCreate( newInstance, !req.options.mirror && req );
     }
 
-    // Send JSONP-friendly response if it's supported
-    // (HTTP 201: Created)
-    res.status( 201 );
+    // Do a final query to populate the associations of the record.
+    var Q = Model.findOne( newInstance[ Model.primaryKey ] );
+    Q = actionUtil.populateEach( Q, req );
+    Q.exec( function foundAgain( err, populatedRecord ) {
+      if ( err ) return res.serverError( err );
+      if ( !populatedRecord ) return res.serverError( 'Could not find record after updating!' );
 
-    var emberizedJSON = {};
-    emberizedJSON[ Model.identity ] = newInstance.toJSON();
-    res.ok( emberizedJSON );
+      // Send JSONP-friendly response if it's supported
+      // (HTTP 201: Created)
+      res.status( 201 );
+      res.ok( actionUtil.emberizeJSON( Model.identity, populatedRecord, req.options.associations, false ) );
+
+    } );
   } );
 };
