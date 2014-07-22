@@ -1,6 +1,8 @@
 Sails > Ember Blueprints
 ======================
 
+`Version 0.1.1`
+
 Ember Data compatible blueprints for Sails v0.10
 
 
@@ -35,6 +37,7 @@ However, there is a more [complete list of expected responses](https://stackover
 
 * Add node dependencies `npm install --save lodash` and `npm install --save pluralize`
 * Drop the blueprints from this repository in `myproject/api/blueprints`
+* Drop the `Ember` service from this repository in `myproject/api/services`
 * Generate some API resources, e.g. `sails generate api user`
 * Start your app with `sails lift`
 
@@ -51,6 +54,12 @@ If you have logged in users and you always want to associate newly created recor
 The `emberizeJSON` method in *actionUtil.js* can transform your populated records into sideloaded models, but you have to decide when is the right time to do this depending on your API needs.
 
 You can use the `performSideload` switch at the beginning of each blueprint to set the behavior, but a better way would be to implement some kind of hook that determines whether to sideload or not based on the request.
+
+
+# Changelog
+
+* 0.1.1: Added Ember service to handle "links" (alternative to populating records), added `populate` blueprint
+* 0.1.0: Fresh start from Sails RC8, blueprints: `create`, `update`, `destroy`, `find`, `findone`
 
 
 # Todo
