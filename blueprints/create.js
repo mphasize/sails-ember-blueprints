@@ -58,7 +58,7 @@ module.exports = function createRecord( req, res ) {
       // Send JSONP-friendly response if it's supported
       // (HTTP 201: Created)
       res.status( 201 );
-      res.ok( actionUtil.emberizeJSON( Model.identity, populatedRecord, req.options.associations, false ) );
+      res.ok( actionUtil.emberizeJSON( Model, populatedRecord, req.options.associations, false ) );
 
     } );
   } );
