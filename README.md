@@ -43,8 +43,21 @@ However, there is a more [complete list of expected responses](https://stackover
 * Generate some API resources, e.g. `sails generate api user`
 * Start your app with `sails lift`
 
-
 Now you should be up and running and your Ember Data app should be able to talk to your Sails backend.
+
+### Ember RESTAdapter
+
+If you're using [Ember CLI](//ember-cli.com), you only need to setup the RESTAdapter as the application adapter.
+( You can also use it for specific models only. )
+
+In your Ember project: app/adapters/application.js
+
+	export default DS.RESTAdapter.extend( {
+	  coalesceFindRequests: true,	// these blueprints support coalescing (reduces the amount of requests)
+	  namespace: '/', 				// same as API prefix in Sails config
+	  host: 'localhost:1337' 		// Sails server
+	} );
+
 
 
 ### Create with current user
@@ -56,6 +69,7 @@ If you have logged in users and you always want to associate newly created recor
 The `emberizeJSON` method in *actionUtil.js* can transform your populated *embedded* records into sideloaded records, but you have to decide when is the right time to do this depending on your API needs.
 
 You can use the `performSideload` switch at the beginning of each blueprint to set the behavior, but a better way would be to implement some kind of hook that determines whether to sideload or not based on the request.
+
 
 
 # Changelog
