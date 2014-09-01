@@ -10,7 +10,7 @@ Since version v0.10 [Sails](http://beta.sailsjs.org/) supports overriding the de
 
 The blueprints in this repository are meant as a starting point to make Sails work with Ember, Ember Data and the default Ember Data RESTAdapter.
 
-`!` *On August 18th, Ember Data 1.0 beta-9 was released, including a lot of improvements for delivering model associations/relations as Embedded Records (instead of Sideloading). Embedding records is much closer to what Sails does orginally, so it might be better to move into that direction. But since the actual JSON API structure is very different for these two approaches and since most APIs will be designed to work with multiple clients, I'd like to see support/alternatives for both ways. If you happen to know a project that will support the embedded style, please send me a note!*
+`!` *On August 18th, [Ember Data 1.0 beta-9](http://emberjs.com/blog/2014/08/18/ember-data-1-0-beta-9-released.html) was released, including a lot of improvements for delivering model associations/relations as Embedded Records (instead of Sideloading). Embedding records is much closer to what Sails does orginally, so it might be better to move into that direction. But since the actual JSON API structure is very different for these two approaches and since most APIs will be designed to work with multiple clients, I'd like to see support/alternatives for both ways. If you happen to know a project that will support the embedded style, please send me a note!*
 
 
 ### Ember Data expectations
