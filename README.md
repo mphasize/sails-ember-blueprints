@@ -10,6 +10,8 @@ Since version v0.10 [Sails](http://beta.sailsjs.org/) supports overriding the de
 
 The blueprints in this repository are meant as a starting point to make Sails work with Ember, Ember Data and the default Ember Data RESTAdapter.
 
+`!` *On August 18th, Ember Data 1.0 beta-9 was released, including a lot of improvements for delivering model associations/relations as Embedded Records (instead of Sideloading). Embedding records is much closer to what Sails does orginally, so it might be better to move into that direction. But since the actual JSON API structure is very different for these two approaches and since most APIs will be designed to work with multiple clients, I'd like to see support/alternatives for both ways. If you happen to know a project that will support the embedded style, please send me a note!*
+
 
 ### Ember Data expectations
 
@@ -82,3 +84,8 @@ I am still trying to figure out how to make these blueprints more maintainable a
 # Scope
 
 The blueprints in this repository should provide a starting point for a Sails backend that works with an Ember frontend app. However, there are a lot of things missing that would be needed for a full blown app (like authentication and access control) but these things don't really fit into the blueprints.
+
+
+# Sails Ember Starter Kit
+
+@artificialio used these blueprints to create the first version of their Vagrant-based [Sails Ember Starter Kit](https://artificialio.github.io/sane/). Cool!
