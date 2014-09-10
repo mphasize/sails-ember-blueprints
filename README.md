@@ -70,6 +70,13 @@ The `emberizeJSON` method in *actionUtil.js* can transform your populated *embed
 
 You can use the `performSideload` switch at the beginning of each blueprint to set the behavior, but a better way would be to implement some kind of hook that determines whether to sideload or not based on the request.
 
+### Accessing the REST interface without Ember Data
+
+If you want to access the REST routes with your own client or a tool like [Postman](http://www.getpostman.com/) you may have to set the correct HTTP headers:
+
+    Accept: application/json
+    Content-Type: application/json
+
 
 
 # Changelog
