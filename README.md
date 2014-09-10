@@ -1,7 +1,7 @@
 Sails > Ember Blueprints
 ======================
 
-`Version 0.1.2`
+`Version 0.1.3`
 
 Ember Data compatible blueprints for Sails v0.10
 
@@ -24,7 +24,7 @@ However, there is a more [complete list of expected responses](https://stackover
 # Getting started
 
 
-* Install the latest Sails version `npm install sails@beta -g`
+* Install the latest Sails version `npm install sails`
 * Create a new Sails project `sails new myproject`
 * Configure sails to use **pluralized** blueprint routes.
 
@@ -38,6 +38,7 @@ However, there is a more [complete list of expected responses](https://stackover
 
 
 * Add node dependencies `npm install --save lodash` and `npm install --save pluralize`
+* Get the blueprints (Download ZIP, `git clone` or `npm install sails-ember-blueprints`) 
 * Drop the blueprints from this repository in `myproject/api/blueprints`
 * Drop the `Ember` service from this repository in `myproject/api/services`
 * Generate some API resources, e.g. `sails generate api user`
@@ -81,6 +82,7 @@ If you want to access the REST routes with your own client or a tool like [Postm
 
 # Changelog
 
+* 0.1.3: Added package.json for more convenient installation using `npm install`
 * 0.1.2: Fixed #3 - find() request could end up as a findOne() response, added docs on setting HTTP headers
 * 0.1.1: Added Ember service to handle "links" (alternative to populating records), added `populate` blueprint
 * 0.1.0: Fresh start from Sails RC8, blueprints: `create`, `update`, `destroy`, `find`, `findone`
