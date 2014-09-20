@@ -20,5 +20,12 @@
   "bugs": {
     "url": "https://github.com/mphasize/sails-ember-blueprints/issues"
   },
-  "homepage": "https://github.com/mphasize/sails-ember-blueprints"
+  "homepage": "https://github.com/mphasize/sails-ember-blueprints",
+  "dependencies": {
+    "fs-extra": "^0.11.1"
+  },
+  "peerDependencies": {
+    "lodash": "~2.4.1",
+    "pluralize": "~1.0.1"
+  }
 }
