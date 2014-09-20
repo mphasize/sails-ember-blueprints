@@ -24,11 +24,11 @@ However, there is a more [complete list of expected responses](https://stackover
 # Getting started
 
 
-* Install the latest Sails version `npm install sails`
+* Install the latest Sails version `npm install -g sails`
 * Create a new Sails project `sails new myproject`
 * Configure sails to use **pluralized** blueprint routes.
 
-	In `myproject/config/blueprints.js` set `pluralize: true`
+  In `myproject/config/blueprints.js` set `pluralize: true`
 
 
       module.exports.blueprints = {
@@ -37,10 +37,8 @@ However, there is a more [complete list of expected responses](https://stackover
       };
 
 
-* Add node dependencies `npm install --save lodash` and `npm install --save pluralize`
-* Get the blueprints (Download ZIP, `git clone` or `npm install sails-ember-blueprints`) 
-* Drop the blueprints from this repository in `myproject/api/blueprints`
-* Drop the `Ember` service from this repository in `myproject/api/services`
+
+* `npm install sails-ember-blueprints`. This automatically copies the blueprint and service files into the right folders
 * Generate some API resources, e.g. `sails generate api user`
 * Start your app with `sails lift`
 
@@ -53,11 +51,11 @@ If you're using [Ember CLI](//ember-cli.com), you only need to setup the RESTAda
 
 In your Ember project: app/adapters/application.js
 
-	export default DS.RESTAdapter.extend( {
-	  coalesceFindRequests: true,	// these blueprints support coalescing (reduces the amount of requests)
-	  namespace: '/', 				// same as API prefix in Sails config
-	  host: 'localhost:1337' 		// Sails server
-	} );
+  export default DS.RESTAdapter.extend( {
+    coalesceFindRequests: true, // these blueprints support coalescing (reduces the amount of requests)
+    namespace: '/',         // same as API prefix in Sails config
+    host: 'localhost:1337'    // Sails server
+  } );
 
 
 
