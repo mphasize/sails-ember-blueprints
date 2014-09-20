@@ -4,7 +4,8 @@
   "description": "Sails blueprints for a REST interface compatible with Ember Data's DS.RESTAdapter",
   "main": "install.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall" : "install.js"
   },
   "repository": {
     "type": "git",
