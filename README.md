@@ -54,9 +54,9 @@ If you're using [Ember CLI](//ember-cli.com), you only need to setup the RESTAda
 In your Ember project: app/adapters/application.js
 
 	export default DS.RESTAdapter.extend( {
-	  coalesceFindRequests: true,	// these blueprints support coalescing (reduces the amount of requests)
-	  namespace: '/', 				// same as API prefix in Sails config
-	  host: 'localhost:1337' 		// Sails server
+	  coalesceFindRequests: true,   // these blueprints support coalescing (reduces the amount of requests)
+	  namespace: '/',               // same as API prefix in Sails config
+	  host: 'http://localhost:1337' // Sails server
 	} );
 
 
