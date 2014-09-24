@@ -1,7 +1,7 @@
 Sails > Ember Blueprints
 ======================
 
-`Version 0.1.3`
+`Version 0.1.4`
 
 Ember Data compatible blueprints for Sails v0.10
 
