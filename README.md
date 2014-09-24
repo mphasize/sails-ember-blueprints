@@ -94,6 +94,7 @@ If you want to access the REST routes with your own client or a tool like [Postm
 
 # Changelog
 
+* 0.1.4: Added global config for `performSideload` thanks to @sergiolepore
 * 0.1.3: Added package.json for more convenient installation using `npm install`
 * 0.1.2: Fixed #3 - find() request could end up as a findOne() response, added docs on setting HTTP headers
 * 0.1.1: Added Ember service to handle "links" (alternative to populating records), added `populate` blueprint
