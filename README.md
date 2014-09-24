@@ -69,7 +69,19 @@ If you have logged in users and you always want to associate newly created recor
 
 The `emberizeJSON` method in *actionUtil.js* can transform your populated *embedded* records into sideloaded records, but you have to decide when is the right time to do this depending on your API needs.
 
-You can use the `performSideload` switch at the beginning of each blueprint to set the behavior, but a better way would be to implement some kind of hook that determines whether to sideload or not based on the request.
+To enable this behavior, add the following lines to the `config/blueprints.js` file:
+
+```
+// config/blueprints.js
+module.exports.blueprints = {
+  // existing configuration
+  // ...
+
+  ember: {
+    sideload: true
+  }
+}
+```
 
 ### Accessing the REST interface without Ember Data
 
