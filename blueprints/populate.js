@@ -1,9 +1,9 @@
 /**
  * Module dependencies
  */
-var util = require( 'util' ),
-  actionUtil = require( './_util/actionUtil' ),
-  _ = require( 'lodash' );
+var util = require( 'util' );
+var _ = require('lodash');
+var emberUtils = require('./utils/emberUtils.js');
 
 /**
  * Populate (or "expand") an association
@@ -24,7 +24,7 @@ var util = require( 'util' ),
 
 module.exports = function expand( req, res ) {
 
-  var Model = actionUtil.parseModel( req );
+  var Model = emberUtils.parseModel( req );
   var relation = req.options.alias;
   if ( !relation || !Model ) return res.serverError();
 
@@ -37,16 +37,16 @@ module.exports = function expand( req, res ) {
   // Determine whether to populate using a criteria, or the
   // specified primary key of the child record, or with no
   // filter at all.
-  var childPk = actionUtil.parsePk( req );
-  var where = childPk ? [ childPk ] : actionUtil.parseCriteria( req );
+  var childPk = emberUtils.parsePk( req );
+  var where = childPk ? [ childPk ] : emberUtils.parseCriteria( req );
 
   Model
     .findOne( parentPk )
     .populate( relation, {
       where: where,
-      skip: actionUtil.parseSkip( req ),
-      limit: actionUtil.parseLimit( req ),
-      sort: actionUtil.parseSort( req )
+      skip: emberUtils.parseSkip( req ),
+      limit: emberUtils.parseLimit( req ),
+      sort: emberUtils.parseSort( req )
     } )
     .exec( function found( err, matchingRecord ) {
       if ( err ) return res.serverError( err );
@@ -57,7 +57,7 @@ module.exports = function expand( req, res ) {
       // TODO: only subscribe to populated attribute- not the entire model
       if ( sails.hooks.pubsub && req.isSocket ) {
         Model.subscribe( req, matchingRecord );
-        actionUtil.subscribeDeep( req, matchingRecord );
+        emberUtils.subscribeDeep( req, matchingRecord );
       }
 
       // find the model identity and the Collection for this relation
@@ -68,7 +68,7 @@ module.exports = function expand( req, res ) {
       var RelatedModel = req._sails.models[ relationIdentity ];
       if ( !RelatedModel ) throw new Error( util.format( 'Invalid route option, "model".\nI don\'t know about any models named: `%s`', relationIdentity ) );
 
-      var related = Ember.linkAssociations( RelatedModel, matchingRecord[ relation ] );
+      var related = emberUtils.linkAssociations( RelatedModel, matchingRecord[ relation ] );
 
       json = {};
       json[ relationIdentity ] = related;

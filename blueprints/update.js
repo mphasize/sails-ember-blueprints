@@ -2,9 +2,9 @@
  * Module dependencies
  */
 
-var actionUtil = require( './_util/actionUtil' );
 var util = require( 'util' );
 var _ = require( 'lodash' );
+var emberUtils = require('./utils/emberUtils.js');
 
 /**
  * Enable sideloading. Edit config/blueprints.js and add:
@@ -30,14 +30,14 @@ var performSideload = (sails.config.blueprints.ember && sails.config.blueprints.
 module.exports = function updateOneRecord( req, res ) {
 
   // Look up the model
-  var Model = actionUtil.parseModel( req );
+  var Model = emberUtils.parseModel( req );
 
   // Locate and validate the required `id` parameter.
-  var pk = actionUtil.requirePk( req );
+  var pk = emberUtils.requirePk( req );
 
   // Create `values` object (monolithic combination of all parameters)
   // But omit the blacklisted params (like JSONP callback param, etc.)
-  var values = actionUtil.parseValues( req, Model );
+  var values = emberUtils.parseValues( req, Model );
 
   // Omit the path parameter `id` from values, unless it was explicitly defined
   // elsewhere (body/query):
@@ -89,11 +89,11 @@ module.exports = function updateOneRecord( req, res ) {
       //  included by default to provide a better interface for integrating
       //  front-end developers.)
       var Q = Model.findOne( updatedRecord[ Model.primaryKey ] );
-      Q = actionUtil.populateEach( Q, req );
+      Q = emberUtils.populateEach( Q, req );
       Q.exec( function foundAgain( err, populatedRecord ) {
         if ( err ) return res.serverError( err );
         if ( !populatedRecord ) return res.serverError( 'Could not find record after updating!' );
-        res.ok( actionUtil.emberizeJSON( Model, populatedRecord, req.options.associations, performSideload ) );
+        res.ok( emberUtils.emberizeJSON( Model, populatedRecord, req.options.associations, performSideload ) );
       } ); // </foundAgain>
     } ); // </updated>
   } ); // </found>

@@ -1,8 +1,19 @@
 /**
  * Module dependencies
  */
-var util = require( 'util' ),
-  actionUtil = require( './_util/actionUtil' );
+var util = require( 'util' );
+var emberUtils = require('./utils/emberUtils.js');
+
+/**
+ * This will associate the current logged in user to newly created record.
+ * Edit config/blueprints.js and add:
+ *   ember: {
+ *     createWithCurrent: true
+ *   }
+ *
+ * @type {Boolean}
+ */
+var createWithCurrentUser = (sails.config.blueprints.ember && sails.config.blueprints.ember.createWithCurretUser);
 
 /**
  * Create Record
@@ -19,16 +30,18 @@ var util = require( 'util' ),
  */
 module.exports = function createRecord( req, res ) {
 
-  var Model = actionUtil.parseModel( req );
-  var data = actionUtil.parseValues( req, Model );
+  var Model = emberUtils.parseModel( req );
+  var data = emberUtils.parseValues( req, Model );
 
-  /* if ( req.user && req.user.id ) {
-    sails.log.debug( 'Injecting req.user into blueprint create -> data.' );
-    data.user = req.user.id;
-  } else {
-    // exception for creating new users, otherwise any creative act needs a logged in user
-    if ( Model.identity !== 'user' ) return res.forbidden( "Create blueprint needs an authenticated user!" );
-  } */
+  if (createWithCurrentUser) {
+    if ( req.user && req.user.id ) {
+      sails.log.debug( 'Injecting req.user into blueprint create -> data.' );
+      data.user = req.user.id;
+    } else {
+      // exception for creating new users, otherwise any creative act needs a logged in user
+      if ( Model.identity !== 'user' ) return res.forbidden( "Create blueprint needs an authenticated user!" );
+    }
+  }
 
   // Create new instance of model using data from params
   Model.create( data ).exec( function created( err, newInstance ) {
@@ -50,7 +63,7 @@ module.exports = function createRecord( req, res ) {
 
     // Do a final query to populate the associations of the record.
     var Q = Model.findOne( newInstance[ Model.primaryKey ] );
-    Q = actionUtil.populateEach( Q, req );
+    Q = emberUtils.populateEach( Q, req );
     Q.exec( function foundAgain( err, populatedRecord ) {
       if ( err ) return res.serverError( err );
       if ( !populatedRecord ) return res.serverError( 'Could not find record after updating!' );
@@ -58,7 +71,7 @@ module.exports = function createRecord( req, res ) {
       // Send JSONP-friendly response if it's supported
       // (HTTP 201: Created)
       res.status( 201 );
-      res.ok( actionUtil.emberizeJSON( Model, populatedRecord, req.options.associations, false ) );
+      res.ok( emberUtils.emberizeJSON( Model, populatedRecord, req.options.associations, false ) );
 
     } );
   } );

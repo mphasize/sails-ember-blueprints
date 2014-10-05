@@ -1,8 +1,8 @@
 /**
  * Module dependencies
  */
-var util = require( 'util' ),
-  actionUtil = require( './_util/actionUtil' );
+var util = require( 'util' );
+var emberUtils = require('./utils/emberUtils.js');
 
 /**
  * Enable sideloading. Edit config/blueprints.js and add:
@@ -32,21 +32,21 @@ var performSideload = (sails.config.blueprints.ember && sails.config.blueprints.
 
 module.exports = function findOneRecord( req, res ) {
 
-  var Model = actionUtil.parseModel( req );
-  var pk = actionUtil.requirePk( req );
+  var Model = emberUtils.parseModel( req );
+  var pk = emberUtils.requirePk( req );
 
   var query = Model.findOne( pk );
-  query = actionUtil.populateEach( query, req );
+  query = emberUtils.populateEach( query, req );
   query.exec( function found( err, matchingRecord ) {
     if ( err ) return res.serverError( err );
     if ( !matchingRecord ) return res.notFound( 'No record found with the specified `id`.' );
 
     if ( sails.hooks.pubsub && req.isSocket ) {
       Model.subscribe( req, matchingRecord );
-      actionUtil.subscribeDeep( req, matchingRecord );
+      emberUtils.subscribeDeep( req, matchingRecord );
     }
 
-    res.ok( actionUtil.emberizeJSON( Model, matchingRecord, req.options.associations, performSideload ) );
+    res.ok( emberUtils.emberizeJSON( Model, matchingRecord, req.options.associations, performSideload ) );
   } );
 
 };
