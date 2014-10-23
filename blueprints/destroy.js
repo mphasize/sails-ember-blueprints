@@ -1,8 +1,8 @@
 /**
  * Module dependencies
  */
-var util = require( 'util' ),
-  actionUtil = require( './_util/actionUtil' );
+var util = require( 'util' );
+var emberUtils = require('./utils/emberUtils.js');
 
 /**
  * Destroy One Record
@@ -21,11 +21,11 @@ var util = require( 'util' ),
  */
 module.exports = function destroyOneRecord( req, res ) {
 
-  var Model = actionUtil.parseModel( req );
-  var pk = actionUtil.requirePk( req );
+  var Model = emberUtils.parseModel( req );
+  var pk = emberUtils.requirePk( req );
 
   var query = Model.findOne( pk );
-  query = actionUtil.populateEach( query, req );
+  query = emberUtils.populateEach( query, req );
   query.exec( function foundRecord( err, record ) {
     if ( err ) return res.serverError( err );
     if ( !record ) return res.notFound( 'No record found with the specified `id`.' );

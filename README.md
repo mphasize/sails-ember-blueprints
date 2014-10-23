@@ -15,7 +15,7 @@ The blueprints in this repository are meant as a starting point to make Sails wo
 
 ### Ember Data expectations
 
-Ember Data expects the JSON responses from the API to follow certain conventions. 
+Ember Data expects the JSON responses from the API to follow certain conventions.
 Some of these conventions are mentioned in the [Ember model guide](http://emberjs.com/guides/models/connecting-to-an-http-server/).
 However, there is a more [complete list of expected responses](https://stackoverflow.com/questions/14922623/what-is-the-complete-list-of-expected-json-responses-for-ds-restadapter) on Stackoverflow.
 
@@ -23,26 +23,39 @@ However, there is a more [complete list of expected responses](https://stackover
 
 # Getting started
 
+### Installing dependencies
 
-* Install the latest Sails version `npm install sails`
-* Create a new Sails project `sails new myproject`
-* Configure sails to use **pluralized** blueprint routes.
+On your project's root directory:
 
-	In `myproject/config/blueprints.js` set `pluralize: true`
+```
+npm install --save ember-sails-blueprints
+```
 
+### Configuring your project
 
-      module.exports.blueprints = {
-        // ...
-        pluralize: true
-      };
+First, configure Sails to use **pluralized** blueprints routes.
 
+In `myproject/config/blueprints.js` set `pluralize: true`
 
-* Add node dependencies `npm install --save lodash` and `npm install --save pluralize`
-* Get the blueprints (Download ZIP, `git clone` or `npm install sails-ember-blueprints`) 
-* Drop the blueprints from this repository in `myproject/api/blueprints`
-* Drop the `Ember` service from this repository in `myproject/api/services`
-* Generate some API resources, e.g. `sails generate api user`
-* Start your app with `sails lift`
+```
+module.exports.blueprints = {
+	// ...
+	pluralize: true
+};
+```
+
+Next, you need to override the default blueprints (provided by Sails).
+
+1. Inside your `api/` directory, create a new directory called `blueprints`.
+2. Inside this new directory, create the following files with its contents:
+	* create.js: `module.exports = require('sails-ember-blueprints').blueprints.create;`
+	* destroy.js: `module.exports = require('sails-ember-blueprints').blueprints.destroy;`
+	* find.js: `module.exports = require('sails-ember-blueprints').blueprints.find;`
+	* findone.js: `module.exports = require('sails-ember-blueprints').blueprints.findone;`
+	* populate.js: `module.exports = require('sails-ember-blueprints').blueprints.populate;`
+	* update.js: `module.exports = require('sails-ember-blueprints').blueprints.update;`
+
+Finally, generate some API resources, e.g. `sails generate api user`, and start your app with `sails lift`.
 
 Now you should be up and running and your Ember Data app should be able to talk to your Sails backend.
 
@@ -63,11 +76,21 @@ In your Ember project: app/adapters/application.js
 
 ### Create with current user
 
-If you have logged in users and you always want to associate newly created records with the current user, take a look at `blueprints/create.js` lines 25-31 and uncomment the code if it fits your needs.
+If you have logged in users and you always want to associate newly created records with the current user, edit your `config/blueprints.js` file and add the following lines:
+
+```
+// config/blueprints.js
+module.exports.blueprints = {
+	// existing configuration
+	// ...
+
+	ember: {
+		createWithCurrentUser: true
+	}
+}
+```
 
 ### Sideloading records
-
-The `emberizeJSON` method in *actionUtil.js* can transform your populated *embedded* records into sideloaded records, but you have to decide when is the right time to do this depending on your API needs.
 
 To enable this behavior, add the following lines to the `config/blueprints.js` file:
 
@@ -81,6 +104,19 @@ module.exports.blueprints = {
     sideload: true
   }
 }
+```
+
+### Useful utilities
+
+You can manually use the utils bundled with this package (such as `emberizeJSON`):
+
+```
+var emberUtils = require('sails-ember-blueprints').utils;
+
+// ...
+
+var emberizedResults = emberUtils.emberizeJSON( model, records, associations, sideload );
+
 ```
 
 ### Accessing the REST interface without Ember Data
@@ -102,6 +138,23 @@ If you want to access the REST routes with your own client or a tool like [Postm
 
 
 # Todo
+
+### Add documentation for utils
+
+Given that emberUtils is now exposed, it's highly recommended to add a little guide or description about every utility.
+
+README.md
+```
+Utils
+-----
+
+emberizeJSON:
+- Prepare records and populated associations to be consumed by Ember's DS.RESTAdapter
+- Usage:
+
+	blablabla...
+
+```
 
 ### Support pagination metadata
 
