@@ -1,6 +1,8 @@
 Sails > Ember Blueprints
 ======================
 
+**Note: This Project has been supersed by https://github.com/mphasize/sails-generate-ember-blueprints**
+
 `Version 0.1.4`
 
 Ember Data compatible blueprints for Sails v0.10
