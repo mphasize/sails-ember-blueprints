@@ -176,6 +176,6 @@ I am still trying to figure out how to make these blueprints more maintainable a
 The blueprints in this repository should provide a starting point for a Sails backend that works with an Ember frontend app. However, there are a lot of things missing that would be needed for a full blown app (like authentication and access control) but these things don't really fit into the blueprints.
 
 
-# Sails Ember Starter Kit
+# Sane Stack
 
-@artificialio used these blueprints to create the first version of their Vagrant-based [Sails Ember Starter Kit](https://artificialio.github.io/sane/). Cool!
+@artificialio used these blueprints to create the first version of their Docker-based [Sane Stack](http://sanestack.com/). Cool!
