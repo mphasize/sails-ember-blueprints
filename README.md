@@ -1,7 +1,7 @@
 Sails > Ember Blueprints
 ======================
 
-**Note: This Project has been supersed by https://github.com/mphasize/sails-generate-ember-blueprints**
+**Note: This project has been superseded by https://github.com/mphasize/sails-generate-ember-blueprints**
 
 `Version 0.1.4`
 
