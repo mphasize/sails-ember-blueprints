@@ -30,7 +30,7 @@ However, there is a more [complete list of expected responses](https://stackover
 On your project's root directory:
 
 ```
-npm install --save ember-sails-blueprints
+npm install --save sails-ember-blueprints
 ```
 
 ### Configuring your project
